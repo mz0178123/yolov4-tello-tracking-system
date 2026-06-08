@@ -1,15 +1,15 @@
 # Autonomous Target Tracking and Visual Servo Control System for UAVs Using YOLOv4
 
-This repository contains the source code for our **University Graduation Project (畢業專題)**. It features an autonomous object-tracking and closed-loop control system developed for the **DJI Tello** drone, powered by the **YOLOv4 (Darknet)** deep learning framework and OpenCV.
+This repository contains the source code for my **University Graduation Project (畢業專題)**. It features an autonomous object-tracking and closed-loop control system developed for the **DJI Tello** drone, powered by the **YOLOv4 (Darknet)** deep learning framework and OpenCV.
 
 ---
 
 ## 👥 Project Information
 
-* **Institution:** [Your University Name] (你的大學名稱)
-* **Department:** [Your Department Name] (你的科系名稱)
-* **Project Members:** [Member 1], [Member 2] (專題組員姓名)
-* **Advisor:** Prof. [Advisor Name] (指導教授姓名)
+* **Institution:** National Formosa University (國立虎尾科技大學)
+* **Department:** Department of Aeronautical Engineering - Avionics Division (飛機工程系電子組)
+* **Project Member:** Individual Project
+* **Advisor:** Prof. Chao-Yang Lee (李朝陽 教授)
 
 ---
 
@@ -64,6 +64,6 @@ Pilots can take over or land the drone instantly using the following hotkeys:
 ### 2. Setup
 Clone this repository and install the Python dependencies:
 ```bash
-git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
-cd YOUR_REPO_NAME
+git clone [https://github.com/mz0178123/yolov4-tello-tracking-system.git](https://github.com/mz0178123/yolov4-tello-tracking-system.git)
+cd yolov4-tello-tracking-system
 pip install djitellopy opencv-python

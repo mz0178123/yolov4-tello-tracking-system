@@ -1,53 +1,68 @@
-# Tello Drone Autonomous Tracking with YOLOv4
+# Autonomous Target Tracking and Visual Servo Control System for UAVs Using YOLOv4
 
-An autonomous object-tracking and control system for the **DJI Tello** drone using the **YOLOv4 (Darknet)** object detection framework. The system captures live video from the drone's camera, detects target objects in real-time, and automatically adjusts the drone's flight path to keep the target centered in the frame.
-
----
-
-## 🚀 Features
-
-* **Real-time Object Detection:** Leverages YOLOv4 (Darknet) for low-latency, high-accuracy object detection.
-* **Multi-threaded Architecture:** Uses separate Python threads for video capture, AI inference, and drawing/control to ensure a smooth, lag-free video stream.
-* **Autonomous Visual Tracking:** Automatically commands the drone to move forward, backward, up, down, or sideways based on the target's bounding box relative to a central safety zone.
-* **Manual Keyboard Override:** Allows pilot takeover at any time using standard keyboard hotkeys (`W`, `A`, `S`, `D`, etc.).
+This repository contains the source code for our **University Graduation Project (畢業專題)**. It features an autonomous object-tracking and closed-loop control system developed for the **DJI Tello** drone, powered by the **YOLOv4 (Darknet)** deep learning framework and OpenCV.
 
 ---
 
-## 🛠️ System Architecture
+## 👥 Project Information
 
-The application is split into three main concurrent threads managed by Python's `threading` and `queue.Queue`:
-
-1.  **Video Capture Thread:** Streams live RGB frames from the DJI Tello camera and resizes them to 960x720.
-2.  **Inference Thread:** Feeds the processed frames into the YOLOv4 Darknet neural network to extract bounding boxes.
-3.  **Drawing & Control Thread:** Renders the detection boxes and a central green safety zone on the UI. It executes drone tracking commands on a ~3-second interval check to prevent command flooding.
+* **Institution:** [Your University Name] (你的大學名稱)
+* **Department:** [Your Department Name] (你的科系名稱)
+* **Project Members:** [Member 1], [Member 2] (專題組員姓名)
+* **Advisor:** Prof. [Advisor Name] (指導教授姓名)
 
 ---
 
-## ⌨️ Controls
+## 📌 Project Overview & Motivation
 
-### Manual Flight Controls
+Autonomous Unmanned Aerial Vehicles (UAVs) often require robust vision systems to interact with their environment. The objective of this project is to implement a **Visual Servo Control System** that enables a commercial drone (DJI Tello) to lock onto and autonomously follow a specific target without manual pilot intervention.
+
+By utilizing **YOLOv4**, the system achieves low-latency target detection. The calculated bounding box coordinates are then fed into a bounding-box-filtering algorithm to map out control errors, sending flight commands dynamically to maintain the target at the center of the drone's field of view (FOV).
+
+---
+
+## ⚙️ System Architecture
+
+To guarantee smooth live streaming ($960 \times 720$ resolution) and prevent control signal lag, the software architecture utilizes **Multi-threaded Concurrency** and **Thread-safe Queues**:
+
+1.  **Video Capture Thread:** Streams live RGB frames from the DJI Tello onboard camera.
+2.  **AI Inference Thread:** Feeds processed frames into the YOLOv4 Darknet neural network to extract bounding boxes ($x, y, w, h$).
+3.  **Visual Servo Control Thread:** Calculates the tracking errors based on the target center relative to a pre-defined central safety zone and dispatches flight commands.
+
+---
+
+## ⌨️ Control Logic & Boundaries
+
+### 1. Autonomous Tracking Mode (Closed-Loop)
+The system establishes a central green boundary box ($420 \le x \le 540$, $175 \le y \le 295$) on the $960 \times 720$ resolution frame. 
+
+* **Target in Center:** Triggers `move_forward(180)` to approach the target.
+* **Target Deviated Up / Down:** Dispatches vertical correction commands (`move_up` / `move_down`).
+* **Target Deviated Left / Right:** Dispatches horizontal correction commands (`move_left` / `move_right`).
+
+*Note: A 3-second control throttle is implemented (`(time.time() - t0) % 3 > 2.95`) to prevent flooding the Tello drone with overlapping commands.*
+
+### 2. Manual Keyboard Override (Safety Feature)
+Pilots can take over or land the drone instantly using the following hotkeys:
 * `T`: Takeoff & Hover
-* `L` / `ESC`: Land safely and exit
+* `L` / `ESC`: Safe landing and session termination
 * `W` / `S`: Move Forward / Backward
 * `A` / `D`: Move Left / Right
 * `Q` / `E`: Rotate Counter-Clockwise / Clockwise
-* `R` / `F`: Move Up / Down
-
-### Autonomous Mode
-When a target object's center point moves outside the central green boundary box ($420 \le x \le 540$, $175 \le y \le 295$), the drone will automatically adjust its position to re-center the target.
+* `R` / `F`: Rise / Fall
 
 ---
 
 ## 📦 Prerequisites & Installation
 
-### 1. Requirements
+### 1. Dependencies
 * Python 3.7+
 * OpenCV (`opencv-python`)
 * [djitellopy](https://github.com/damiafuentes/DJITelloPy)
-* Darknet (YOLOv4 Python wrapper compiled with GPU/CUDA support recommended)
+* Darknet Framework (YOLOv4 Python wrapper)
 
 ### 2. Setup
-Clone this repository and install dependencies:
+Clone this repository and install the Python dependencies:
 ```bash
 git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
 cd YOUR_REPO_NAME
